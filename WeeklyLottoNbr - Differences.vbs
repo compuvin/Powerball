@@ -29,6 +29,21 @@ PrevWinners = getfile("PreviousPB.csv")
 LastLotto = mid(PrevWinners,instr(1,PrevWinners,"|")+1,instr(1,PrevWinners,",P")-instr(1,PrevWinners,"|"))
 'msgbox LastLotto
 
+'Remove last powerballs (1 right now) - Added 2015-01-15
+dim LastPB(0), PBTemp
+PBTemp = PrevWinners
+for i = 0 to ubound(LastPB)
+  LastPB(i) = int(mid(PBTemp,instr(PBTemp,"P")+1,2))
+  PBTemp = replace(PBTemp,left(PBTemp,instr(PBTemp,"P")+3),"X")
+  'msgbox "'" & LastPB(i) & "'"
+next
+for i = 0 to ubound(LastPB) 'Separated for portability :)
+  Grp2 = Replace("," & Grp2 & ",", "," & LastPB(i) & ",", ",")
+  if left(Grp2, 1) = "," then Grp2 = right(Grp2, len(Grp2)-1)
+  if right(Grp2, 1) = "," then Grp2 = left(Grp2, len(Grp2)-1)
+next
+
+'Remove previous winners
 for WinCount = 0 to 4
   WinningNbrs(WinCount) = int(left(LastLotto,instr(1,LastLotto,",")-1))
   LastLotto = replace("," & LastLotto,"," & WinningNbrs(WinCount) & ",", "")
@@ -45,9 +60,9 @@ next
 GrpTempAll = Grp2
 
 'Decide whether to play repeats
-PlayRepeats = 0 'inputbox("Enter how many REPEAT numbers to pick:", "REPEAT Numbers", "0") 
+PlayRepeats = inputbox("Enter how many REPEAT numbers to pick:", "REPEAT Numbers", "0") 
 if PlayRepeats <= 0 then
-  'OutputNote = OutputNote & vbcrlf & "'Repeat numbers were skipped" & vbcrlf
+  OutputNote = OutputNote & vbcrlf & "'Repeat numbers were skipped" & vbcrlf
 else
 PlayRepeats = PlayRepeats - 1 'List starts at 0 so taking one off
 for WinCount = 0 to 4
@@ -193,13 +208,13 @@ for WinCount = 0 to 4
 next
 end if
 
-'1 through 59
-'All numbers: "1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59"
-Grp1 = "1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59"
-Grp2 = Grp1
-Grp3 = Grp1
-Grp4 = Grp1
-Grp5 = Grp1
+'1111 Pattern (AKA Kevin's Numbers) - Revised 11/14/13
+'-----------------------
+'Grp1 = "11,17,25,32,34,35,40,41,48,49,55,57"
+'Grp2 = "7,9,10,13,14,29,36,39,43,46,50,52,54"
+'Grp3 = "1,2,6,12,19,21,26,27,44,56"
+'Grp4 = "8,15,20,24,31,33,37,38,45,51,53"
+'Grp5 = "3,4,5,16,18,22,23,28,30,42,47,58,59"
 
 'for WinCount = 0 to 4 'Remove winning numbers from Quartile
 '  Grp1 = Replace("," & Grp1 & ",", "," & WinningNbrs(WinCount) & ",", ",")
